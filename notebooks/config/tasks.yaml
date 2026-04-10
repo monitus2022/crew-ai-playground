@@ -1,0 +1,44 @@
+plan_project:
+  description: >
+    Analyze the user's request: {user_request}.
+    Create a clear requirements document with acceptance criteria.
+    Enforce Vue 3 + Vite + TypeScript + TailwindCSS.
+  expected_output: >
+    A well-structured Markdown file (requirements.md) with sections: Overview, Features, Tech Stack, Component Breakdown, and Acceptance Criteria.
+  agent: project_manager
+
+design_ui:
+  description: >
+    Based on the requirements, create a detailed UI/UX specification including component hierarchy, layout, color scheme, and Tailwind classes.
+  expected_output: >
+    Detailed design specification in Markdown (design_spec.md) with component descriptions and suggested Tailwind styling.
+  agent: ui_ux
+  context: [plan_project]
+
+code_implementation:
+  description: >
+    Build the complete Vue 3 + Vite application based on the requirements and design spec.
+    Create a proper Vite project structure with all necessary files (package.json, vite.config, components, etc.).
+    Make sure the app is fully functional and looks great.
+  expected_output: >
+    All source code files written to the project folder. The project must be ready for `npm install && npm run build`.
+  agent: coder
+  context: [plan_project, design_ui]
+
+quality_assurance:
+  description: >
+    Review the entire codebase for bugs, best practices, accessibility, TypeScript issues, and UX problems.
+    Provide a detailed report and suggest fixes if needed.
+  expected_output: >
+    A QA report (qa_report.md) listing any issues found and confirmation if the app is ready to build and demo.
+  agent: qa
+  context: [plan_project, design_ui, code_implementation]
+
+final_review:
+  description: >
+    Review all previous outputs and decide if the app is ready for the user. 
+    If minor fixes are needed, instruct the coder. Otherwise, mark as complete.
+  expected_output: >
+    Final status: "READY_FOR_DEMO" with summary of the project and instructions for the user.
+  agent: project_manager
+  context: [plan_project, design_ui, code_implementation, quality_assurance]

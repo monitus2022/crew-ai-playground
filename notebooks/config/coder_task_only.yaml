@@ -1,0 +1,17 @@
+create_webapp:
+  description: |
+    Create a complete single-file web application for the following user request:
+    {user_request}
+    
+    Important Requirements:
+    - Use only one HTML file (single file app)
+    - Include Tailwind CSS via CDN
+    - Make it beautiful, modern, and visually appealing
+    - Add smooth animations where suitable
+    - Make it fully functional with JavaScript
+    - Ensure it is mobile responsive
+    - Add a dark mode toggle if it makes sense for the app
+  expected_output: |
+    A complete, ready-to-run index.html file with everything embedded (Tailwind + JavaScript).
+    Do not include explanations or comments in the code. The file should be clean and production-ready.
+  output_file: index.html
