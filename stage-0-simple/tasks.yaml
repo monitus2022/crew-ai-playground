@@ -14,4 +14,4 @@ create_webapp:
   expected_output: |
     A complete, ready-to-run index.html file with everything embedded (Tailwind + JavaScript).
     Do not include explanations or comments in the code. The file should be clean and production-ready.
-  output_file: output/index.html
+  output_file: projects/index.html
