@@ -1,13 +1,14 @@
 create_webapp:
   description: |
-    Create a complete single-file web application for this request:
+    Create a complete single-file web application for this user request:
     {user_request}
     
-    Important Instructions:
-    - First, create a clean project folder inside "projects/" using a suitable kebab-case name (example: projects/pomodoro-timer/)
-    - Generate a complete, beautiful web app as a single index.html file
-    - Use Tailwind CSS via CDN
-    - Make it modern, responsive, and fully functional
-    - Add dark mode toggle when suitable
-  expected_output: The complete web app saved as index.html inside its own project folder under the "projects" directory.
-  output_file: index.html
+    STRICT RULES YOU MUST FOLLOW:
+    1. Create a project folder under "projects/" with a suitable kebab-case name (e.g. projects/pomodoro-timer/)
+    2. ONLY output the raw content of index.html. Do NOT wrap it in markdown, code blocks, or add any explanations.
+    3. Do NOT write things like "**File:**", "```html", "```", or any headers.
+    4. Output ONLY the pure HTML code starting with <!DOCTYPE html>
+    5. Use Tailwind CSS via CDN.
+    6. Make the app beautiful, modern, responsive and fully functional.
+  expected_output: Pure raw index.html content (starting with <!DOCTYPE html>) saved inside the correct project folder.
+  output_file: projects/{project_name}/index.html

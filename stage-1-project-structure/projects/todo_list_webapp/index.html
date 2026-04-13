@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List - Modern & Responsive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-in-out',
+            'slide-in': 'slideIn 0.3s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            slideIn: {
+              '0%': { opacity: '0', transform: 'translateX(-20px)' },
+              '100%': { opacity: '1', transform: 'translateX(0)' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-950 text-slate-900 dark:text-slate-100 antialiased font-sans overflow-x-hidden">
+  <!-- Dark Mode Toggle -->
+  <button
+    id="themeToggle"
+    class="fixed top-6 right-6 z-50 p-3 bg-white/20 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 dark:border-slate-700/50 hover:border-white/50 dark:hover:border-slate-600/50 hover:shadow-3xl hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-500/30 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-300"
+    aria-label="Toggle dark mode"
+  >
+    <span id="themeIcon" class="text-2xl">🌙</span>
+  </button>
+
+  <div class="container mx-auto px-6 sm:px-8 lg:px-12 py-12 sm:py-16 lg:py-20 max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-16 sm:mb-20 animate-in fade-in duration-1000">
+      <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent drop-shadow-2xl mb-4">
+        Todo
+      </h1>
+      <p class="text-xl sm:text-2xl md:text-3xl opacity-75 font-medium max-w-2xl mx-auto leading-relaxed">
+        Add tasks, stay organized, and toggle themes seamlessly.
+      </p>
+    </div>
+
+    <div class="max-w-2xl mx-auto space-y-8">
+      <!-- Add Task Form -->
+      <div class="animate-in fade-in duration-1000 delay-200">
+        <div class="flex flex-col sm:flex-row gap-4">
+          <input
+            id="newTaskInput"
+            type="text"
+            placeholder="What needs to be done today?..."
+            class="flex-1 px-6 py-5 text-xl sm:text-2xl bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl border border-white/40 dark:border-slate-700/50 shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-500/30 focus:border-indigo-500/50 transition-all duration-300 placeholder-slate-500 dark:placeholder-slate-400 font-medium min-h-[68px]"
+          >
+          <button
+            id="addTaskBtn"
+            class="px-8 py-5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-xl font-semibold text-white rounded-3xl shadow-2xl hover:shadow-3xl hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transition-all duration-300 whitespace-nowrap"
+          >
+            Add Task
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex flex-wrap justify-center gap-3 sm:gap-4 animate-in fade-in duration-1000 delay-400">
+        <button data-filter="all" class="filter-btn px-6 py-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-slate-700/30 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-500/30 transition-all duration-300 font-medium text-lg filter-active">
+          All
+        </button>
+        <button data-filter="active" class="filter-btn px-6 py-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-slate-700/30 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-500/30 transition-all duration-300 font-medium text-lg">
+          Active
+        </button>
+        <button data-filter="completed" class="filter-btn px-6 py-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-slate-700/30 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-indigo-500/30 transition-all duration-300 font-medium text-lg">
+          Completed
+        </button>
+      </div>
+
+      <!-- Tasks List -->
+      <ul id="tasksList" class="space-y-4 animate-in fade-in duration-1000 delay-600"></ul>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-24 sm:py-32 animate-in fade-in duration-1000 delay-600">
+        <div class="w-32 h-32 mx-auto mb-8 bg-gradient-to-r from-indigo-400/20 to-purple-400/20 rounded-3xl backdrop-blur-xl border-2 border-dashed border-indigo-200/50 dark:border-slate-700/50 flex items-center justify-center">
+          <span class="text-4xl">📝</span>
+        </div>
+        <h3 class="text-3xl sm:text-4xl font-bold mb-2">No tasks yet</h3>
+        <p class="text-xl opacity-75 max-w-md mx-auto">Add a task above to get started on your productive day!</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data & State
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let currentFilter = 'all';
+
+    // DOM Elements
+    const newTaskInput = document.getElementById('newTaskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const tasksList = document.getElementById('tasksList');
+    const emptyState = document.getElementById('emptyState');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // Utilities
+    const escapeHtml = (text) => {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    const saveTasks = () => {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    };
+
+    // Theme Management
+    const setTheme = (theme) => {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        themeIcon.textContent = '☀️';
+      } else {
+        document.documentElement.classList.remove('dark');
+        themeIcon.textContent = '🌙';
+      }
+      localStorage.setItem('theme', theme);
+    };
+
+    const initTheme = () => {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+    };
+
+    // Task Operations
+    const addTask = () => {
+      const text = newTaskInput.value.trim();
+      if (text) {
+        tasks.unshift({ id: Date.now(), text, completed: false });
+        newTaskInput.value = '';
+        saveTasks();
+        render();
+      }
+    };
+
+    const toggleTask = (id) => {
+      const task = tasks.find((t) => t.id === id);
+      if (task) {
+        task.completed = !task.completed;
+        saveTasks();
+        render();
+      }
+    };
+
+    const deleteTask = (id) => {
+      tasks = tasks.filter((t) => t.id !== id);
+      saveTasks();
+      render();
+    };
+
+    const startEdit = (li, id) => {
+      const textSpan = li.querySelector('.task-text');
+      const editInput = li.querySelector('.edit-input');
+      textSpan.classList.add('hidden');
+      editInput.classList.remove('hidden');
+      editInput.focus();
+      editInput.select();
+    };
+
+    const saveEdit = (id, newText) => {
+      newText = newText.trim();
+      if (!newText) {
+        deleteTask(id);
+        return;
+      }
+      const task = tasks.find((t) => t.id === id);
+      if (task) {
+        task.text = newText;
+        saveTasks();
+        render();
+      }
+    };
+
+    // Render Tasks
+    const render = () => {
+      let filteredTasks = tasks;
+      if (currentFilter === 'active') {
+        filteredTasks = tasks.filter((t) => !t.completed);
+      } else if (currentFilter === 'completed') {
+        filteredTasks = tasks.filter((t) => t.completed);
+      }
+
+      tasksList.innerHTML = '';
+
+      if (filteredTasks.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      filteredTasks.forEach((task) => {
+        const li = document.createElement('li');
+        li.dataset.id = task.id;
+        li.className = 'group flex items-start gap-4 p-6 bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl rounded-3xl shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 animate-in slide-in';
+        li.innerHTML = `
+          <input type="checkbox" ${task.completed ? 'checked' : ''} data-id="${task.id}" class="mt-1 w-6 h-6 rounded-lg flex-shrink-0 accent-indigo-500 hover:accent-indigo-600 focus:ring-2 focus:ring-indigo-500/50 transition-all duration-200 cursor-pointer">
+          <div class="flex-1 min-h-[44px] flex items-center">
+            <span class="task-text px-3 py-2 text-lg font-medium cursor-pointer flex-1" data-id="${task.id}">${escapeHtml(task.text)}</span>
+            <input type="text" class="edit-input hidden flex-1 px-3 py-2 text-lg bg-white/80 dark:bg-slate-700/80 backdrop-blur rounded-2xl border border-slate-300 dark:border-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-200 font-medium" data-id="${task.id}" value="${escapeHtml(task.text)}">
+          </div>
+          <button data-delete="${task.id}" class="p-2 -m-2 opacity-0 group-hover:opacity-100 hover:bg-red-500/20 rounded-2xl transition-all duration-200 hover:scale-110 flex-shrink-0" title="Delete task">
+            <span class="text-xl">🗑️</span>
+          </button>
+        `;
+        tasksList.appendChild(li);
+      });
+    };
+
+    // Event Listeners
+    addTaskBtn.addEventListener('click', addTask);
+    newTaskInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTask();
+    });
+    newTaskInput.addEventListener('input', () => {
+      newTaskInput.classList.toggle('ring-2', newTaskInput.value.trim());
+      newTaskInput.classList.toggle('ring-green-500/30', newTaskInput.value.trim());
+    });
+
+    // Filter Events
+    filterBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach((b) => b.classList.remove('bg-indigo-500', 'text-white', 'shadow-2xl', 'scale-105', 'border-indigo-500'));
+        btn.classList.add('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600', 'text-white', 'shadow-2xl', 'scale-105', 'border-2', 'border-indigo-500/50');
+        currentFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    // Task List Event Delegation
+    tasksList.addEventListener('change', (e) => {
+      if (e.target.matches('input[type="checkbox"]')) {
+        const id = parseInt(e.target.dataset.id);
+        toggleTask(id);
+      }
+    });
+
+    tasksList.addEventListener('dblclick', (e) => {
+      if (e.target.matches('.task-text')) {
+        const li = e.target.closest('li');
+        const id = parseInt(li.dataset.id);
+        startEdit(li, id);
+      }
+    });
+
+    tasksList.addEventListener('click', (e) => {
+      if (e.target.closest('[data-delete]')) {
+        const id = parseInt(e.target.closest('[data-delete]').dataset.delete);
+        deleteTask(id);
+      }
+    });
+
+    tasksList.addEventListener('blur', (e) => {
+      if (e.target.matches('.edit-input')) {
+        const id = parseInt(e.target.dataset.id);
+        saveEdit(id, e.target.value);
+      }
+    }, true);
+
+    tasksList.addEventListener('keypress', (e) => {
+      if (e.target.matches('.edit-input') && e.key === 'Enter') {
+        e.target.blur();
+      }
+    });
+
+    // Theme Toggle
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Initialize
+    initTheme();
+    render();
+  </script>
+</body>
+</html>
